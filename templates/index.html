@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="login">
+    <div class="login-container">
+        <img src="{{ url_for('static', filename='img/logo_ufrpe.png') }}" alt="Logo da UFRPE">
+        <form action="/" method="POST" class="login-form">
+            <label class="form-label" for="usuario">Usuário</label>
+            <input class="form-input" type="text" id="usuario" name="usuario" required>
+            <label class="form-label" for="senha">Senha</label>
+            <input class="form-input" type="password" id="senha" name="senha" required>
+            <input class="login-submit" type="submit" value="Entrar">
+            {% if error%}
+                <p class="error-message"><strong>{{error}}</strong></p>
+            {% endif%}
+            <p class="cadastro-message">Não possui login? Clique <a href="/cadastro-usuario">aqui</a> para se cadastrar</p>
+        </form>
+    </div>
+</main>
+
+{% endblock %}

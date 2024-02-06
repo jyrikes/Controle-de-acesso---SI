@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="container">
+    <section class="subcontainer">
+        <form action="/perguntas" method="POST" class="cadastro-form">
+            <label class="form-label form-item" for="categoria">Selecione uma categoria</label>
+            <select class="form-select form-item" name="categorias" id="categoria">
+                <option value="Geral">Geral</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Matrícula">Matrícula</option>
+                <option value="Eventos">Eventos</option>
+                <option value="Bolsas">Bolsas</option>
+                <option value="EStagios">EStagios</option>
+            </select>
+            <button class="btn btn-primary" id="Visualizar" type="submit">Visualizar</button>
+        </form>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Pergunta</th>
+                    <th>Resposta</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in perguntas %}
+                    <tr>
+                        <td>{{ p.categoria }}</td>
+                        <td>{{ p.pergunta }}</td>
+                        <td>{{ p.resposta }}</td>
+                        <td class="table-links">
+                            <a class="table-button" href="/atualiza/{{p.id}}">Editar</a>
+                            <a class="table-button" href="/delete/{{p.id}}" style="color: #C90202">Deletar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="/menu" class="btn btn-secondary back-menu-button">Voltar ao Menu </a>
+
+    </section>
+</main>
+
+{% endblock %}

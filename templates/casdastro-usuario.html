@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="container">
+    <section class="subcontainer">
+        <h2>Cadastro de usuário</h2>
+      
+      <form action="/cadastro-usuario" method="POST" class="cadastro-form">
+        <label class="form-label" for="usuario">Usuário</label>
+        <input class="form-input input-border" type="text" id="usuario" name="usuario" maxlength="50" required>
+        <label class="form-label" for="senha">Senha</label>
+        <input class="form-input input-border" type="password" id="senha" name="senha" maxlength="20" required>
+
+			  <input class="btn btn-primary" id="cadastrar-usuario" type="submit" value="Cadastrar">
+        {% if error%}
+          <p class="error-message"><strong>{{error}}</strong></p>
+        {% endif%}
+      </form>
+    </section>
+</main>
+
+{% endblock %}

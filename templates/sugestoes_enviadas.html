@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="container">
+    <section class="subcontainer">
+        <form action="/visualizar_sugestoes" method="POST" class="cadastro-form">
+            <label class="form-label form-item" for="categoria">Selecione uma categoria</label>
+            <select class="form-select form-item" name="categoria_sugestao" id="categoria_sugestao">
+                <option value="Geral">Geral</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Matrícula">Matrícula</option>
+                <option value="Eventos">Eventos</option>
+                <option value="Estagios">Estagios</option>
+                <option value="Bolsas">Bolsas</option>
+            </select>
+            <button class="btn btn-primary" id="Visualizar" type="submit">Visualizar</button>
+        </form>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Pergunta</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in sugestoes %}
+                    <tr>
+                        <td>{{ s.categoria }}</td>
+                        <td>{{ s.pergunta }}</td>
+                        <td class="table-links">
+                            <a class="table-button" id="redirecionar_pergunta" href="/adicionar_ao_banco/{{s.id}}">Adicionar</a>
+                            <a class="table-button" href="/delete_sugestao/{{s.id}}" style="color: #C90202">Deletar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="/menu" class="btn btn-secondary back-menu-button">Voltar ao Menu </a>
+
+    </section>
+</main>
+
+{% endblock %}

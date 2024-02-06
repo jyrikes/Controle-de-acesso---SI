@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="login">
+    <div class="login-container">
+        <img src="{{ url_for('static', filename='img/logo_ufrpe.png') }}" alt="Logo da UFRPE">
+        <h5 class="login-title">Bem vindo, aluno! Por favor, confirme sua matrícula</h5>
+        <form action="/sugestao" class="login-form">
+            <input class="form-input" type="text" id="usuario" name="usuario" required>
+            <input class="login-submit" type="submit" value="Entrar">
+        </form>
+    </div>
+</main>
+
+
+{% endblock %}
+

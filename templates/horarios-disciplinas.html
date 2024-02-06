@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="container">
+    <section class="subcontainer">
+        <h2>Horários das disciplinas</h2>
+      
+        <form action="/horarios-disciplinas" enctype="multipart/form-data" method="POST" class="cadastro-form">
+            <label class="form-label form-item" for="upload">Selecione o arquivo do horário em pdf</label>
+            <input class="btn form-input" type="file" name="upload" accept="application/pdf" id="upload" required/>
+
+            <input class="btn btn-primary" id="salvar" type="submit" value="Salvar">
+        </form>
+
+        {% if arquivos %}
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Horário Atual</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ arquivos }}</td>
+                        <td class="table-links">
+                            <a class="table-button" target="_blank" href="{{ '/horario-pdf/%s' % arquivos }}">Visualizar</a>
+                            <a class="table-button" href="/delete-horario" style="color: #C90202">Deletar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <p class="form-label" style="margin: 2rem 0;">Ainda não há nenhum horário salvo</p>
+        {% endif %}
+
+        <a href="/menu" class="btn btn-secondary back-menu-button">Voltar ao Menu </a>
+    </section>
+</main>
+
+{% endblock %}

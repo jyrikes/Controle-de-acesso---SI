@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="login">
+    <div class="error_404_page">
+        <img src="{{ url_for('static', filename='img/logo_ufrpe.png') }}" alt="Logo da UFRPE">
+        <h5 class="login-title">Página 404</h5>
+        <p class="login-text">Ocorreu um erro, por favor <br> retorne para a página inicial</p>
+        <a href="/sugestao" class="btn btn-primary">Voltar</a>
+    </div>
+</main>
+
+{% endblock %}

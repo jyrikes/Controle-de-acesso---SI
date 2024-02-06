@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+    
+{% block main %}
+
+<main class="container">
+    <section class="subcontainer">
+        <h2>Atualizar pergunta</h2>
+      
+      <form action="/atualiza/{{pergunta.id}}" method="POST" class="cadastro-form">
+        <label class="form-label form-item" for="categoria">Selecione uma categoria</label>
+        <select class="form-select form-item" name="categorias" id="categoria">
+          <option value="{{pergunta.categoria}}">{{pergunta.categoria}}</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Matrícula">Matrícula</option>
+          <option value="Eventos">Eventos</option>
+          <option value="Bolsas">Bolsas</option>
+          <option value="EStagios">EStagios</option>
+        </select>
+
+			<label class="form-label form-item" for="pergunta">Digite a pergunta a ser cadastrada</label>
+			<textarea class="form-textarea" type="text" id="pergunta" name="pergunta" required>{{pergunta.pergunta}}</textarea>
+
+			<label class="form-label form-item" for="resposta">Digite a resposta a ser cadastrada</label>
+			<textarea class="form-textarea" type="text" id="resposta" name="resposta" required>{{pergunta.resposta}}</textarea>
+
+			<input class="btn btn-primary" id="atualizar" type="submit" value="Atualizar">
+    </form>
+		<a href="/perguntas" class="btn btn-secondary form-item back-button">Voltar</a>
+    </section>
+</main>
+
+{% endblock %}
