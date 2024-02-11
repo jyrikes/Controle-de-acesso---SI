@@ -20,11 +20,13 @@ class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(50), nullable=False, unique=True)
     senha = db.Column(db.String(64), nullable=False)
+    tipo_de_usuario = db.Column(db.String(10), nullable=False)
     autenticado = db.Column(db.Boolean, default=False)
 
-    def __init__(self, usuario, senha):
+    def __init__(self, usuario, senha, tipo_de_usuario):
         self.usuario = usuario
         self.senha = senha
+        self.tipo_de_usuario = tipo_de_usuario
     
     def is_active(self):
         """True, as all users are active."""

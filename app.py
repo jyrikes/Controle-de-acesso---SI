@@ -5,8 +5,6 @@ from models import Pergunta, Usuario, Sugestao
 from utils import criptografar_senha, comparar_senhas, gerar_horarios, deleta_arquivos, Similaridade
 import os
 
-
-
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config['SECRET_KEY'] = 'equipi'
@@ -44,8 +42,12 @@ def index():
 
         if login:
             if comparar_senhas(login.senha, user_password):
-                login_user(login)
-                return redirect('/menu')
+                if(login.tipo_de_usuario == "Professor"):
+                    login_user(login)
+                    return redirect("/menu")
+                else: 
+                    login_user(login)
+                    return redirect('/menu_aluno')
             else:
                 error = 'Usuário ou senha incorretos'
                 return render_template('index.html', error=error)
@@ -55,6 +57,14 @@ def index():
     else:
         return render_template('index.html', error=error)
     
+@app.route("/menu_convidado", methods=['GET','POST'])
+def website_menu_conv():
+    return render_template('menu_convidado.html')
+
+@app.route("/menu_aluno", methods=['GET','POST'])
+def website_menu_alun():
+    return render_template('menu_aluno.html')
+
 
 @app.route('/cadastro-usuario', methods=['GET', 'POST'])
 def cadastro_usuario():
@@ -63,7 +73,9 @@ def cadastro_usuario():
     if request.method == 'POST':
         user = request.form.get('usuario', False).strip()
         user_password = criptografar_senha(request.form.get('senha', False)).strip()
-        novo_usuario = Usuario(user, user_password)
+        user_type = request.form.get('tipo_de_usuario', False).strip()
+
+        novo_usuario = Usuario(user, user_password, user_type)
 
         for char in user:
             if char == ' ':
