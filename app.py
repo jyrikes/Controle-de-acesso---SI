@@ -1,13 +1,18 @@
-from flask import Flask, render_template, request, redirect, send_from_directory
+from flask import Flask, abort, render_template, request, redirect, send_from_directory
 from flask_login import LoginManager, login_required, logout_user, login_user, current_user
 from database import db
 from models import Pergunta, Usuario, Sugestao
 from utils import criptografar_senha, comparar_senhas, gerar_horarios, deleta_arquivos, Similaridade
 import os
+import requests
+import json
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-app.config['SECRET_KEY'] = 'equipi'
+app.config['SECRET_KEY'] = '6Lfd9XcpAAAAAO9f_jm0GBIEXXZgtKLF7uznqaMH'
+SITE_KEY = '6Lfd9XcpAAAAAKem5vIEflN8CUAIvMPHSMkjtHdI'
+SECRET_KEY = '6Lfd9XcpAAAAAO9f_jm0GBIEXXZgtKLF7uznqaMH'
+VERIFY_URL ='https://www.google.com/recaptcha/api/siteverify '
 
 db.init_app(app)
 with app.app_context():
@@ -35,11 +40,14 @@ def index():
     error = None
 
     if request.method == 'POST':
+        secret_response =  request.form['g-recaptcha-response']
+        verify_response = requests.post(url= f'{VERIFY_URL}?secret={SECRET_KEY}&response={secret_response}').json
         user = request.form.get('usuario', False).strip()
         user_password = request.form.get('senha', False).strip()
-
+        print(verify_response)
         login = Usuario.query.filter_by(usuario=user).first()
-
+        if verify_response['success'] != False:
+            abort(401)
         if login:
             if comparar_senhas(login.senha, user_password):
                 if(login.tipo_de_usuario == "Professor"):
@@ -55,13 +63,14 @@ def index():
             error = 'Usuário não cadastrado'
             return render_template('index.html', error=error)
     else:
-        return render_template('index.html', error=error)
+        return render_template('index.html', error=error,site_key = SITE_KEY)
     
 @app.route("/menu_convidado", methods=['GET','POST'])
 def website_menu_conv():
     return render_template('menu_convidado.html')
 
 @app.route("/menu_aluno", methods=['GET','POST'])
+@login_required
 def website_menu_alun():
     return render_template('menu_aluno.html')
 
@@ -211,6 +220,7 @@ def delete_horario():
 # ================================== Rotas para acesso dos alunos =========================================
 
 @app.route("/send", methods=['GET', 'POST'])
+@login_required
 def send():
     if request.method == 'POST':
         categoria = request.form.get('categoria_aluno', False)
@@ -228,26 +238,32 @@ def send():
         return redirect('/sugestao')
 
 @app.route('/sugestao')
+@login_required
 def sugestao():
     return render_template('sugestao.html')
 
 @app.route('/sucesso')
+@login_required
 def sucesso():
     return render_template('sugestaoenv.html')
 
 @app.route('/erro')
+@login_required
 def erro():
     return render_template('404.html')
 
 @app.route('/index_aluno')
+@login_required
 def index_aluno():
     return render_template('index_aluno.html')
 
 @app.route('/sugestoes_enviadas')
+@login_required
 def sugestoes_enviadas():
     return render_template('sugestoes_enviadas.html')
 
 @app.route('/visualizar_sugestoes', methods=['GET', 'POST'])
+@login_required
 def visualizar_sugestoes():
     categoria = request.form.get('categoria_sugestao', False)
     if request.method == 'POST':
@@ -261,6 +277,7 @@ def visualizar_sugestoes():
 
     
 @app.route('/delete_sugestao/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_sugestao(id):
     sugestao_to_delete = Sugestao.query.get_or_404(id)
     try:
@@ -271,6 +288,7 @@ def delete_sugestao(id):
         return redirect('/erro')
 
 @app.route('/adicionar_ao_banco/<int:id>', methods=['GET', 'POST'])
+@login_required
 def adicionar_ao_banco(id):
     categoria = Sugestao.query.get_or_404(id).categoria
     pergunta = Sugestao.query.get_or_404(id).pergunta
@@ -289,6 +307,7 @@ def adicionar_ao_banco(id):
 # ====================================== Redirecionamneto telegram =========================================
 
 @app.route('/<pgEspecifica>', methods=['GET', 'POST'])
+@login_required
 def respondeAi(pgEspecifica):
     if request.method == "GET":
         perguntas = Pergunta.query.all()
@@ -312,12 +331,14 @@ def respondeAi(pgEspecifica):
 
 
 @app.route('/arquivos/<nome_do_arquivo>', methods=['GET'])
+@login_required
 def get_arquivo(nome_do_arquivo):
     diretorio = '.\\static\\files\\horario-images'
     return send_from_directory(diretorio, nome_do_arquivo, as_attachment=False)
 
 
 @app.route('/horario-pdf/<nome_do_arquivo>', methods=['GET'])
+@login_required
 def get_arquivo_pdf(nome_do_arquivo):
     diretorio = '.\\static\\files\\horario-pdf'
     return send_from_directory(diretorio, nome_do_arquivo, as_attachment=False)

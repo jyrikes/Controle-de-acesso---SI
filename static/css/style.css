@@ -319,6 +319,12 @@ footer > p {
     border-radius: 5px;
     padding: 5px 10px;
 }
+#radio_bt label{
+    display: inline;
+    padding:  1.5rem;
+    color: #0056b3;
+    
+}
 
 /* ====================================== Tabela de visualização ========================================= */
 

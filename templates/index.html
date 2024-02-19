@@ -5,12 +5,12 @@
 <main class="login">
     <div class="login-container">
         <img src="{{ url_for('static', filename='img/logo_ufrpe.png') }}" alt="Logo da UFRPE">
-        <form action="/" method="POST" class="login-form">
+        <form id="form-login" action="/" method="POST" class="login-form">
             <label class="form-label" for="usuario">Usuário</label>
             <input class="form-input" type="text" id="usuario" name="usuario" required>
             <label class="form-label" for="senha">Senha</label>
             <input class="form-input" type="password" id="senha" name="senha" required>
-            <input class="login-submit" type="submit" value="Entrar">
+            <button class="g-recaptcha login-submit" data-sitekey="{{site_key}}" data-callback='onSubmit' data-action='submit'>Entrar</button>
             {% if error%}
                 <p class="error-message"><strong>{{error}}</strong></p>
             {% endif%}
@@ -20,5 +20,11 @@
 
     </div>
 </main>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+    function onSubmit(token) {
+      document.getElementById("form-login").submit();
+    }
+</script>
 
 {% endblock %}
